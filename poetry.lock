@@ -300,8 +300,8 @@ dev = ["pytest (>=4.6.2)", "black (>=19.3b0)"]
 
 [metadata]
 lock-version = "1.1"
-python-versions = "^3.8"
-content-hash = "f9c856eb57c1e83a90cf83df029fe8baa2fe9acccebb7a43fcc754e29bb9c153"
+python-versions = "3.8.10"
+content-hash = "51e3f1dd08af775be00dcde56e943003aa8bb1556831cfef9b8c6fb34dc2c79a"
 
 [metadata.files]
 appdirs = [
