@@ -1,3 +1,6 @@
 import uvicorn
+import os
 
-uvicorn.run("app:app")
+port = os.environ.get("PORT")
+
+uvicorn.run("app:app", port=int(port))
