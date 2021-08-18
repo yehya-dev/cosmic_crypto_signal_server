@@ -5,7 +5,7 @@ description = ""
 authors = ["Yehya Usman <yehya.dev@gmail.com>"]
 
 [tool.poetry.dependencies]
-python = "^3.8"
+python = "3.8.10"
 fastapi = "^0.68.0"
 uvicorn = "^0.14.0"
 pony = "^0.7.14"
