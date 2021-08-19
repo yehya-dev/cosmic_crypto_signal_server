@@ -1,16 +1,10 @@
 from fastapi import FastAPI
 from _schema import SignalSchema
 from helper import handle_signals
-
 from logger import logger
 
-app = FastAPI(
-    # include_in_schema=False,
-    # title="",
-    # description="",
-    # openapi_url="",
-    # version="",
-)
+
+app = FastAPI()
 
 
 @app.post(
