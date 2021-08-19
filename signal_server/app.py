@@ -4,7 +4,13 @@ from helper import handle_signals
 
 from logger import logger
 
-app = FastAPI()
+app = FastAPI(
+    # include_in_schema=False,
+    # title="",
+    # description="",
+    # openapi_url="",
+    # version="",
+)
 
 
 @app.post(

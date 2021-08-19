@@ -33,5 +33,11 @@ class Future(db.Entity):
 def db_init(debug=False):
     orm.set_sql_debug(debug)
     # This is required because we don't want this database to be created when we are testing
-    db.bind(provider="sqlite", filename="database.sqlite", create_db=True)
+    db.bind(
+        provider="postgres",
+        user="qvxdducteeqqaq",
+        password="431bad48ed80520606e6efd0b3e4350f8b6473cdf02e68f3b8d521c34e646018",
+        host="ec2-54-155-87-214.eu-west-1.compute.amazonaws.com",
+        database="dbitb00hnfh373",
+    )
     db.generate_mapping(create_tables=True)
