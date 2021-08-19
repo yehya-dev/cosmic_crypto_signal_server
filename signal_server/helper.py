@@ -23,13 +23,13 @@ def handle_signals(data: SignalSchema):
         for spot_id in new_set:
             Spot(**request_map[spot_id].dict())
             logger.info(f"New signal: {spot_id}")
-        # TODO Call function that sends a request to bot server
+        # TODO Call function that sends a request to bot server (new)
 
     update_set = spot_insight["update_set"]
     with orm.db_session:
         for spot_id in update_set:
             Spot[spot_id].set(**request_map[spot_id].dict())
-        # TODO Call function that sends a request to bot server
+        # TODO Call function that sends a request to bot server (update)
 
     removed_set = spot_insight["removed_set"]
     with orm.db_session:
@@ -37,7 +37,7 @@ def handle_signals(data: SignalSchema):
             Spot[spot_id].delete()
             logger.info(f"Signal Removed: {spot_id}")
 
-        # TODO Call function that sends a request to bot server
+        # TODO Call function that sends a request to bot server (remove)
 
 
 @orm.db_session
