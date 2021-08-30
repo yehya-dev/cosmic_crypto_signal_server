@@ -6,6 +6,7 @@ from typing import Type, Iterator, Union
 from _schema import SpotSchema, FutureSchema, SignalSchema
 
 from logger import logger
+from signal_dispatch import signal_dispatch
 
 db_init()  # Initialize the database, call this only once
 
@@ -15,23 +16,37 @@ def handle_signals(data: SignalSchema):
     spots = data.spots
     spot_insight = _get_signals_diff_data(spots, Spot)
 
-    # db_map = spot_insight["db_map"]
+    db_map = spot_insight["db_map"]
     request_map = spot_insight["request_map"]
 
     new_set = spot_insight["new_set"]
+
+    new_spots_data = [request_map[spot_id] for spot_id in new_set]
+    signal_dispatch.send_data(new_spots_data, "__create_signals__")
+
     with orm.db_session:
         for spot_id in new_set:
             Spot(**request_map[spot_id].dict())
             logger.info(f"New signal: {spot_id}")
-        # TODO Call function that sends a request to bot server (new)
+            new_spots_data.append(request_map[spot_id])
 
     update_set = spot_insight["update_set"]
+
+    update_spots_data = [request_map[spot_id] for spot_id in update_set]
+    signal_dispatch.send_data(update_spots_data, "__update_signals__")
+
     with orm.db_session:
         for spot_id in update_set:
+            logger.info(f"Update signal: {spot_id}")
             Spot[spot_id].set(**request_map[spot_id].dict())
-        # TODO Call function that sends a request to bot server (update)
+        # TODO Call function that
+        #  sends a request to bot server (update)
 
     removed_set = spot_insight["removed_set"]
+
+    removed_spots_data = [db_map[spot_id] for spot_id in removed_set]
+    signal_dispatch.send_data(removed_spots_data, "__remove_signals__")
+
     with orm.db_session:
         for spot_id in removed_set:
             Spot[spot_id].delete()
@@ -42,13 +57,18 @@ def handle_signals(data: SignalSchema):
 
 @orm.db_session
 def _get_signals_diff_data(
-    data: Union[List[SpotSchema], List[FutureSchema]],
-    model: Union[Type[Spot], Type[Future]],
+    data: List[SpotSchema],
+    model: Type[Spot],
 ):
     db_data = orm.select(item for item in model).order_by(model.created_at)[:]
 
     request_map = _create_id_maps(data)
     db_map = _create_id_maps(db_data)
+
+    db_map_parsed = dict()
+    for item in db_map:
+        item: Spot
+        db_map_parsed[item.spot_id] = SpotSchema.from_orm(item)
 
     request_set = set(request_map)
     db_set = set(db_map)

@@ -22,6 +22,9 @@ class SpotSchema(BaseModel):
     spot_type: str  # TODO Turn into Enum if needed
     coin_logo_url: str
 
+    class Config:
+        orm_mode = True
+
 
 class FutureSchema(BaseModel):
     future_id: str
@@ -47,3 +50,7 @@ class FutureSchema(BaseModel):
 class SignalSchema(BaseModel):
     spots: Optional[List[SpotSchema]]
     futures: Optional[List[FutureSchema]]
+
+
+class SpotSchemaRequestData(BaseModel):
+    __root__: List[SpotSchema]
